@@ -52,7 +52,7 @@ private Connection conn = new KoneksiDb().connect();
         kosong();
     }
 
-    protected void kosong(){//menonaktifkan dan mengclear atau mennghapus isi textfield
+    protected void kosong(){
      txtKode.setText("");
      txtNama.setText("");
      txtHarga.setText("");
@@ -334,6 +334,9 @@ private Connection conn = new KoneksiDb().connect();
         String s = txtStock.getText();
         
         String sql="insert into dt_barang values(?,?,?,?)";
+        String str="SELECT * FROM dt_barang";
+        
+       
          if (btnSimpan.getText().equals("Simpan")){
                 sql="insert into dt_barang values(?,?,?,?)";}
         else {
@@ -341,6 +344,13 @@ private Connection conn = new KoneksiDb().connect();
                +jTable1.getValueAt(jTable1.getSelectedRow(), 0)+"'";
         }
         try{
+            PreparedStatement st = conn.prepareStatement(str);
+            str = "SELECT * FROM dt_barang where namabarang = '"+txtNama.getText() + "'";
+            ResultSet rs = st.executeQuery(str);
+            if(rs.next()){
+                JOptionPane.showMessageDialog(null, "Nama sudah ada");
+                txtNama.requestFocus();
+            } else {
         PreparedStatement stat = conn.prepareStatement(sql);
         stat.setString(1, new Kodebarang(k).getk());
         stat.setString(2, new Namabarang(n).getn());
@@ -352,9 +362,10 @@ private Connection conn = new KoneksiDb().connect();
         
        btnSimpan.setEnabled(false);
        kosong();
-        } catch (SQLException e) {
+                }
+            } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Data Berhasil Disimpan"+e);
-        }                             
+        }
     }//GEN-LAST:event_btnSimpanActionPerformed
 
     private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
