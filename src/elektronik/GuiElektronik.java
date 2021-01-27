@@ -20,11 +20,14 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import elektronik.KoneksiDb;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+
 public class GuiElektronik extends javax.swing.JFrame {
 private Connection conn = new KoneksiDb().connect();
     private DefaultTableModel tabmode;
     protected void datatable(){
-        Object[] Baris ={"Kode Barang","Nama Barang","Harga","Stock"}; 
+        Object[] Baris ={"Kode Barang","Nama Barang","Harga","Jumlah","Total"}; 
 
         tabmode = new DefaultTableModel(null, Baris);
         jTable1.setModel(tabmode);
@@ -39,8 +42,9 @@ private Connection conn = new KoneksiDb().connect();
             String nama=hasil.getString("namabarang");
             String harga=hasil.getString("harga");
             String stock=hasil.getString("stock");
+            String total=hasil.getString("total");
            
-            String[] data={kode,nama,harga,stock};
+            String[] data={kode,nama,harga,stock,total};
             tabmode.addRow(data);
     }
     } catch (Exception e) {
@@ -57,11 +61,13 @@ private Connection conn = new KoneksiDb().connect();
      txtNama.setText("");
      txtHarga.setText("");
      txtStock.setText("");
+     txtTotal.setText("");
      
         txtKode.setEnabled(false); 
         txtNama.setEnabled(false);
         txtStock.setEnabled(false);
         txtHarga.setEnabled(false); 
+        txtTotal.setEnabled(false);
         
     btnSimpan.setEnabled(false);  
     btnTambah.setEnabled(true);
@@ -76,6 +82,7 @@ private Connection conn = new KoneksiDb().connect();
         txtNama.setEnabled(true);
         txtStock.setEnabled(true);
         txtHarga.setEnabled(true); 
+        txtTotal.setEnabled(true);
         
         btnSimpan.setEnabled(true);
     
@@ -109,6 +116,8 @@ private Connection conn = new KoneksiDb().connect();
         txtStock = new javax.swing.JTextField();
         btnRefresh = new javax.swing.JButton();
         btnBatal = new javax.swing.JButton();
+        lblStock1 = new javax.swing.JLabel();
+        txtTotal = new javax.swing.JTextField();
         btnKeluar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -136,7 +145,7 @@ private Connection conn = new KoneksiDb().connect();
         });
         jScrollPane1.setViewportView(jTable1);
 
-        jLabel1.setText("| Data Barang |");
+        jLabel1.setText("| TRANSAKSI |");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -157,8 +166,8 @@ private Connection conn = new KoneksiDb().connect();
                 .addContainerGap()
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 301, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(70, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 333, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(38, Short.MAX_VALUE))
         );
 
         lblKode.setText("Kode Barang");
@@ -167,7 +176,7 @@ private Connection conn = new KoneksiDb().connect();
 
         lblHarga.setText("Harga");
 
-        lblStock.setText("Stock");
+        lblStock.setText("Jumlah");
 
         btnTambah.setText("Tambah");
         btnTambah.addActionListener(new java.awt.event.ActionListener() {
@@ -197,6 +206,12 @@ private Connection conn = new KoneksiDb().connect();
             }
         });
 
+        txtStock.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtStockKeyPressed(evt);
+            }
+        });
+
         btnRefresh.setText("Refresh");
         btnRefresh.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -211,40 +226,51 @@ private Connection conn = new KoneksiDb().connect();
             }
         });
 
+        lblStock1.setText("Total");
+
+        txtTotal.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtTotalKeyPressed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblKode)
-                            .addComponent(lblNama)
-                            .addComponent(lblHarga)
-                            .addComponent(lblStock))
-                        .addGap(41, 41, 41)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(txtNama)
-                            .addComponent(txtHarga)
-                            .addComponent(txtKode, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtStock, javax.swing.GroupLayout.DEFAULT_SIZE, 213, Short.MAX_VALUE)))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(54, 54, 54)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addComponent(btnTambah)
                                 .addGap(18, 18, 18)
                                 .addComponent(btnSimpan))
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
-                                .addGap(6, 6, 6)
+                                .addGap(1, 1, 1)
                                 .addComponent(btnEdit)
                                 .addGap(18, 18, 18)
                                 .addComponent(btnHapus)))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(btnRefresh)
-                            .addComponent(btnBatal))))
+                            .addComponent(btnBatal)))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblKode)
+                            .addComponent(lblNama)
+                            .addComponent(lblHarga)
+                            .addComponent(lblStock)
+                            .addComponent(lblStock1, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(41, 41, 41)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(txtNama)
+                            .addComponent(txtHarga)
+                            .addComponent(txtKode, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtStock, javax.swing.GroupLayout.DEFAULT_SIZE, 213, Short.MAX_VALUE)
+                            .addComponent(txtTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(36, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -266,7 +292,11 @@ private Connection conn = new KoneksiDb().connect();
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblStock)
                     .addComponent(txtStock, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(27, 27, 27)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblStock1)
+                    .addComponent(txtTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnTambah)
                     .addComponent(btnSimpan)
@@ -276,7 +306,7 @@ private Connection conn = new KoneksiDb().connect();
                     .addComponent(btnEdit)
                     .addComponent(btnHapus)
                     .addComponent(btnBatal))
-                .addContainerGap(11, Short.MAX_VALUE))
+                .addGap(16, 16, 16))
         );
 
         btnKeluar.setText("Keluar");
@@ -295,13 +325,9 @@ private Connection conn = new KoneksiDb().connect();
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnKeluar)
-                        .addGap(28, 28, 28))))
+                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnKeluar))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -310,15 +336,13 @@ private Connection conn = new KoneksiDb().connect();
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnKeluar)
-                        .addGap(77, 77, 77))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addGap(41, 41, 41)
+                        .addComponent(btnKeluar))
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(17, Short.MAX_VALUE))
         );
 
-        setSize(new java.awt.Dimension(819, 385));
+        setSize(new java.awt.Dimension(819, 459));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -332,37 +356,35 @@ private Connection conn = new KoneksiDb().connect();
         String n = txtNama.getText();
         String h = txtHarga.getText();
         String s = txtStock.getText();
+        String t = txtTotal.getText();
+        int jumlah = Integer.parseInt(txtStock.getText());
         
-        String sql="insert into dt_barang values(?,?,?,?)";
+        String sql="insert into dt_barang values(?,?,?,?,?)";
         String str="SELECT * FROM dt_barang";
         
        
          if (btnSimpan.getText().equals("Simpan")){
-                sql="insert into dt_barang values(?,?,?,?)";}
+                sql="insert into dt_barang values(?,?,?,?,?)";}
         else {
-       sql="update dt_barang SET kodebarang=?, namabarang=?, harga=?, stock=? WHERE kodebarang='"
+       sql="update dt_barang SET kodebarang=?, namabarang=?, harga=?, stock=?, total=? WHERE kodebarang='"
                +jTable1.getValueAt(jTable1.getSelectedRow(), 0)+"'";
         }
         try{
-            PreparedStatement st = conn.prepareStatement(str);
-            str = "SELECT * FROM dt_barang where namabarang = '"+txtNama.getText() + "'";
-            ResultSet rs = st.executeQuery(str);
-            if(rs.next()){
-                JOptionPane.showMessageDialog(null, "Nama sudah ada");
-                txtNama.requestFocus();
-            } else {
+            
         PreparedStatement stat = conn.prepareStatement(sql);
         stat.setString(1, new Kodebarang(k).getk());
         stat.setString(2, new Namabarang(n).getn());
         stat.setString(3, new Hargabarang(h).geth());
         stat.setString(4, new Stock(s).gets());
+        stat.setString(5, txtTotal.getText());
+
        
         stat.executeUpdate();
         JOptionPane.showMessageDialog(null, "Berhasil Simpan");
         
        btnSimpan.setEnabled(false);
        kosong();
-                }
+                
             } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Data Berhasil Disimpan"+e);
         }
@@ -374,8 +396,39 @@ private Connection conn = new KoneksiDb().connect();
     }//GEN-LAST:event_formWindowActivated
 
     private void btnTambahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTambahActionPerformed
-       aktif();
-       txtKode.requestFocus();
+        
+        try {
+            String str="SELECT * FROM dt_barang";
+             PreparedStatement st = conn.prepareStatement(str);
+            String sql = "SELECT * FROM dt_barang ORDER BY kodebarang DESC";
+            ResultSet rs = st.executeQuery(sql);
+            if (rs.next()) {
+                String kd_barang = rs.getString("kodebarang").substring(1);
+                String AN = "" + (Integer.parseInt(kd_barang) + 1);
+                String Nol = "";
+
+                if(AN.length()==1)
+                {Nol = "000";}
+                else if(AN.length()==2)
+                {Nol = "00";}
+                else if(AN.length()==3)
+                {Nol = "0";}
+                else if(AN.length()==4)
+                {Nol = "";}
+                txtKode.setText("E" + Nol + AN);//sesuaikan dengan variable namenya
+            } else {
+                txtKode.setText("E0001");//sesuaikan dengan variable namenya
+            }
+            rs.close();
+          
+        } catch (Exception e) {
+            e.printStackTrace();//penanganan masalah
+        }
+        
+        
+        aktif();
+       txtNama.requestFocus();
+       txtKode.setEnabled(false);
        btnEdit.setEnabled(false);
        btnTambah.setEnabled(false);
        btnHapus.setEnabled(false);
@@ -394,6 +447,7 @@ private Connection conn = new KoneksiDb().connect();
         txtNama.setText(String.valueOf(jTable1.getValueAt(jTable1.getSelectedRow(), 1))); 
         txtHarga.setText(String.valueOf(jTable1.getValueAt(jTable1.getSelectedRow(), 2))); 
         txtStock.setText(String.valueOf(jTable1.getValueAt(jTable1.getSelectedRow(), 3)));
+        txtTotal.setText(String.valueOf(jTable1.getValueAt(jTable1.getSelectedRow(), 4)));
     }//GEN-LAST:event_jTable1MouseClicked
 
     private void btnKeluarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnKeluarActionPerformed
@@ -422,6 +476,21 @@ private Connection conn = new KoneksiDb().connect();
     private void btnBatalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBatalActionPerformed
         kosong();
     }//GEN-LAST:event_btnBatalActionPerformed
+
+    private void txtTotalKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTotalKeyPressed
+      int jumlah = Integer.parseInt(txtStock.getText());
+        double hrg = Double.parseDouble(txtHarga.getText());
+        double total;
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+                   total = jumlah * hrg;
+        txtTotal.setText(String.valueOf(total)); 
+        }
+    }//GEN-LAST:event_txtTotalKeyPressed
+
+    private void txtStockKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtStockKeyPressed
+     
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtStockKeyPressed
 
     /**
      * @param args the command line arguments
@@ -475,9 +544,11 @@ private Connection conn = new KoneksiDb().connect();
     private javax.swing.JLabel lblKode;
     private javax.swing.JLabel lblNama;
     private javax.swing.JLabel lblStock;
+    private javax.swing.JLabel lblStock1;
     private javax.swing.JTextField txtHarga;
     private javax.swing.JTextField txtKode;
     private javax.swing.JTextField txtNama;
     private javax.swing.JTextField txtStock;
+    private javax.swing.JTextField txtTotal;
     // End of variables declaration//GEN-END:variables
 }
