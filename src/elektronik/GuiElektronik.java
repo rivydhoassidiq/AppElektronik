@@ -41,7 +41,7 @@ private Connection conn = new KoneksiDb().connect();
             String kode=hasil.getString("kodebarang");
             String nama=hasil.getString("namabarang");
             String harga=hasil.getString("harga");
-            String stock=hasil.getString("stock");
+            String stock=hasil.getString("jumlah");
             String total=hasil.getString("total");
            
             String[] data={kode,nama,harga,stock,total};
@@ -366,7 +366,7 @@ private Connection conn = new KoneksiDb().connect();
          if (btnSimpan.getText().equals("Simpan")){
                 sql="insert into dt_barang values(?,?,?,?,?)";}
         else {
-       sql="update dt_barang SET kodebarang=?, namabarang=?, harga=?, stock=?, total=? WHERE kodebarang='"
+       sql="update dt_barang SET kodebarang=?, namabarang=?, harga=?, jumlah=?, total=? WHERE kodebarang='"
                +jTable1.getValueAt(jTable1.getSelectedRow(), 0)+"'";
         }
         try{
